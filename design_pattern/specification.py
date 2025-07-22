@@ -90,7 +90,7 @@ print("🛍️ Cheap Products (< ₹100):")
 print(pf.filter(products, cheap))
 
 print("\n🎧 Cheap Electronics:")
-print(pf.filter(products, cheap & electronics))
+print(pf.filter(products, cheap | electronics))
 
 print("\n🧢 Non-Electronics:")
 print(pf.filter(products, ~electronics))
