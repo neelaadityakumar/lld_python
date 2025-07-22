@@ -1,104 +1,112 @@
-from abc import ABC, abstractmethod
-from enum import Enum
+
 from typing import List, Optional
+from enum import Enum
+from abc import ABC, abstractmethod
 
 
-class Color(Enum):
-    BLACK = "BLACK"
-    WHITE = "WHITE"
+class Chess:
+    def __init__(self):
+        self.chess_board: ChessBoard = ChessBoard()
+        self.player: List[Player] = []
+        self.current_player: Optional[Player] = None
+        self.moves_list: List[Move] = []
+        self.game_status: Optional[GameStatus] = None
 
+    def player_move(self, from_position: 'CellPosition', to_position: 'CellPosition', piece: 'Piece') -> bool:
+        pass
 
-class GameStatus(Enum):
-    ACTIVE = "ACTIVE"
-    PAUSED = "PAUSED"
-    FORFEIT = "FORFEIT"
-    BLACK_WIN = "BLACK_WIN"
-    WHITE_WIN = "WHITE_WIN"
+    def end_game(self) -> bool:
+        pass
 
-
-class Time:
-    def __init__(self, mins: int, secs: int):
-        self.mins = mins
-        self.secs = secs
-
-
-class Account:
-    def __init__(self, username: str, password: str, name: str, email: str, phone: str):
-        self.username = username
-        self.password = password
-        self.name = name
-        self.email = email
-        self.phone = phone
+    def __change_turn(self):
+        pass
 
 
 class Player:
-    def __init__(self, account: Account, color: Color, time_left: Time):
-        self.account = account
-        self.color = color
-        self.time_left = time_left
+    def __init__(self):
+        self.account: Account = Account()
+        self.color: Optional[Color] = None
+        self.time_left: Time = Time()
 
 
-class CellPosition:
-    def __init__(self, ch: str, i: int):
-        self.ch = ch
-        self.i = i
+class Time:
+    def __init__(self):
+        self.mins: int = 0
+        self.secs: int = 0
 
 
-class Cell:
-    def __init__(self, color: Color, position: CellPosition, piece: Optional['Piece'] = None):
-        self.color = color
-        self.position = position
-        self.piece = piece
+class Color(Enum):
+    BLACK = 1
+    WHITE = 2
 
 
-class Move:
-    def __init__(self, turn: Player, piece: 'Piece', start_position: CellPosition, end_position: CellPosition, killed_piece: Optional['Piece'] = None):
-        self.turn = turn
-        self.piece = piece
-        self.start_position = start_position
-        self.end_position = end_position
-        self.killed_piece = killed_piece
+class Account:
+    def __init__(self):
+        self.username: str = ""
+        self.password: str = ""
+        self.name: str = ""
+        self.email: str = ""
+        self.phone: str = ""
+
+
+class GameStatus(Enum):
+    ACTIVE = 1
+    PAUSED = 2
+    FORTFEIGHT = 3
+    BLACK_WIN = 4
+    WHITE_WIN = 5
 
 
 class ChessBoard:
     def __init__(self):
-        self.board: List[List[Cell]] = [[None for _ in range(8)] for _ in range(8)]
+        self.board: List[List['Cell']] = []
 
     def reset_board(self):
         pass
 
+    def update_board(self, move: 'Move'):
+        pass
 
-    def get_cell(self, position: CellPosition) -> Cell:
-        row = position.i
-        col = ord(position.ch.lower()) - ord('a')
-        return self.board[row][col]
 
-    def update_board(self, move: Move):
-        from_cell = self.get_cell(move.start_position)
-        to_cell = self.get_cell(move.end_position)
+class Cell:
+    def __init__(self):
+        self.color: Optional[Color] = None
+        self.piece: Optional[Piece] = None
+        self.position: Optional['CellPosition'] = None
 
-        to_cell.piece = move.piece
-        from_cell.piece = None
+
+class CellPosition:
+    def __init__(self):
+        self.ch: str = ''
+        self.i: int = 0
+
+
+class Move:
+    def __init__(self):
+        self.turn: Optional[Player] = None
+        self.piece: Optional[Piece] = None
+        self.killed_piece: Optional[Piece] = None
+        self.start_position: Optional[CellPosition] = None
+        self.end_position: Optional[CellPosition] = None
 
 
 class Piece(ABC):
-    def __init__(self, color: Color):
-        self.color = color
+    def __init__(self):
+        self.color: Optional[Color] = None
 
     @abstractmethod
-    def move(self, from_position: CellPosition, to_position: CellPosition) -> bool:
+    def move(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
         pass
 
     @abstractmethod
-    def possible_moves(self, from_position: CellPosition) -> List[CellPosition]:
+    def possible_moves(self, from_position: 'CellPosition') -> List['CellPosition']:
         pass
 
     @abstractmethod
-    def validate(self, from_position: CellPosition, to_position: CellPosition) -> bool:
+    def validate(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
         pass
 
 
-# Derived Piece Classes
 
 class Knight(Piece):
     def move(self, from_position, to_position):
@@ -122,78 +130,58 @@ class Knight(Piece):
         return (dx, dy) in [(1, 2), (2, 1)]
 
 
+
 class Bishop(Piece):
-    def move(self, from_position, to_position):
-        return True
+    def move(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
 
-    def possible_moves(self, from_position):
-        return []
+    def possible_moves(self, from_position: 'CellPosition') -> List['CellPosition']:
+        pass
 
-    def validate(self, from_position, to_position):
-        return True
+    def validate(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
 
 
 class Rook(Piece):
-    def move(self, from_position, to_position):
-        return True
+    def move(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
 
-    def possible_moves(self, from_position):
-        return []
+    def possible_moves(self, from_position: 'CellPosition') -> List['CellPosition']:
+        pass
 
-    def validate(self, from_position, to_position):
-        return True
-
-
-class Queen(Piece):
-    def move(self, from_position, to_position):
-        return True
-
-    def possible_moves(self, from_position):
-        return []
-
-    def validate(self, from_position, to_position):
-        return True
+    def validate(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
 
 
 class King(Piece):
-    def move(self, from_position, to_position):
-        return True
+    def move(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
 
-    def possible_moves(self, from_position):
-        return []
+    def possible_moves(self, from_position: 'CellPosition') -> List['CellPosition']:
+        pass
 
-    def validate(self, from_position, to_position):
-        return True
+    def validate(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
+
+
+class Queen(Piece):
+    def move(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
+
+    def possible_moves(self, from_position: 'CellPosition') -> List['CellPosition']:
+        pass
+
+    def validate(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
 
 
 class Pawn(Piece):
-    def move(self, from_position, to_position):
-        return True
+    def move(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
 
-    def possible_moves(self, from_position):
-        return []
+    def possible_moves(self, from_position: 'CellPosition') -> List['CellPosition']:
+        pass
 
-    def validate(self, from_position, to_position):
-        return True
-
-
-class Chess:
-    def __init__(self):
-        self.chess_board = ChessBoard()
-        self.players: List[Player] = []
-        self.current_player: Optional[Player] = None
-        self.moves_list: List[Move] = []
-        self.game_status: GameStatus = GameStatus.ACTIVE
-
-    def player_move(self, from_position: CellPosition, to_position: CellPosition, piece: Piece) -> bool:
-        return True
-
-    def end_game(self) -> bool:
-        return True
-
-    def _change_turn(self):
-        if self.players:
-            self.current_player = self.players[1] if self.current_player == self.players[0] else self.players[0]
-
-
+    def validate(self, from_position: 'CellPosition', to_position: 'CellPosition') -> bool:
+        pass
 
