@@ -62,7 +62,7 @@ class Move:
 
 class ChessBoard:
     def __init__(self):
-        self.board: List[List[Cell]] = []
+        self.board: List[List[Cell]] = [[None for _ in range(8)] for _ in range(8)]
 
     def reset_board(self):
         pass
@@ -194,3 +194,6 @@ class Chess:
     def _change_turn(self):
         if self.players:
             self.current_player = self.players[1] if self.current_player == self.players[0] else self.players[0]
+
+
+
